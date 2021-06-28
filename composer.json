@@ -1,0 +1,28 @@
+{
+    "name": "spacebib/saga",
+    "description": "A Saga is a special type of event listener: one that manages a business transaction",
+    "minimum-stability": "stable",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "youxingxiang",
+            "email": "xingxiang@spacebib.com"
+        }
+    ],
+    "require": {
+        "spatie/laravel-enum": "1.6.0",
+        "spatie/laravel-event-sourcing": "^4.10"
+    },
+    "autoload": {
+        "psr-4": { "Spacebib\\Saga\\" : "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spacebib\\Saga\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    }
+}
