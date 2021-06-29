@@ -238,7 +238,7 @@ class AggregateSaga extends AggregateRoot
 
     protected function getStoredEventRepository(): StoredEventRepository
     {
-        return app(AppEloquentStoredEventRepository::class);
+        return app(SagaEloquentStoredEventRepository::class);
     }
 
     /**

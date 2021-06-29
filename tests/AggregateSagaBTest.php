@@ -12,7 +12,7 @@ use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaA;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
 
-class AggregateSagaTestB extends TestCase
+class AggregateSagaBTest extends TestCase
 {
     public function test_it_can_create_event_five_and_seven_and_nine()
     {

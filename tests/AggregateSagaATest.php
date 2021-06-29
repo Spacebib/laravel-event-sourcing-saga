@@ -11,7 +11,7 @@ use Spacebib\Saga\Tests\Events\SagaEventStepSix;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
 
-class AggregateSagaTestA extends TestCase
+class AggregateSagaATest extends TestCase
 {
 
     public function test_it_can_create_event_five_and_six_eight()

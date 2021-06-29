@@ -5,7 +5,7 @@ namespace Spacebib\Saga;
 use Spatie\EventSourcing\StoredEvents\Repositories\EloquentStoredEventRepository;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
-class AppEloquentStoredEventRepository extends EloquentStoredEventRepository
+class SagaEloquentStoredEventRepository extends EloquentStoredEventRepository
 {
     public function getById($id): StoredEvent
     {
