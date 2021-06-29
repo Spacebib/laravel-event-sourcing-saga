@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Spacebib\Saga\Emails;
+namespace Spacebib\Saga\Tests\Emails;
 
 
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -23,7 +23,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Spacebib\\Saga\\": "tests/"
+            "Spacebib\\Saga\\Tests\\": "tests/"
         }
     },
     "scripts": {

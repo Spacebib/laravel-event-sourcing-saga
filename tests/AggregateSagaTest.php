@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Spacebib\Saga;
+namespace Spacebib\Saga\Tests;
 
 use Spacebib\Saga\AggregateSaga;
 use Spacebib\Saga\Events\SagaRolledBack;
@@ -13,12 +13,13 @@ use Spatie\EventSourcing\Facades\Projectionist;
 use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
-use Tests\Spacebib\Saga\Emails\FailedSagaMail;
-use Tests\Spacebib\Saga\Events\SagaEventStepOne;
-use Tests\Spacebib\Saga\Events\SagaEventStepThree;
-use Tests\Spacebib\Saga\Events\SagaEventStepTwo;
-use Tests\Spacebib\Saga\Sagas\TestSagaWithExceptionSaga;
-use Tests\Spacebib\Saga\Sagas\TestSagaWithExceptionSagaReactor;
+use Spacebib\Saga\Tests\Emails\FailedSagaMail;
+use Spacebib\Saga\Tests\Events\SagaEventStepEight;
+use Spacebib\Saga\Tests\Events\SagaEventStepOne;
+use Spacebib\Saga\Tests\Events\SagaEventStepThree;
+use Spacebib\Saga\Tests\Events\SagaEventStepTwo;
+use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSaga;
+use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaReactor;
 use Tests\TestCase;
 
 class AggregateSagaTest extends TestCase

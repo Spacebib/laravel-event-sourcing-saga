@@ -1,17 +1,17 @@
 <?php
 
 
-namespace Tests\Spacebib\Saga\Sagas;
+namespace Spacebib\Saga\Tests\Sagas;
 
 
 use Spacebib\Saga\AggregateSaga;
 use Illuminate\Support\Facades\Mail;
 use RuntimeException;
-use Tests\Spacebib\Saga\AggregateRoots\AggregateRootA;
-use Tests\Spacebib\Saga\Emails\FailedSagaMail;
-use Tests\Spacebib\Saga\Events\SagaEventStepOne;
-use Tests\Spacebib\Saga\Events\SagaEventStepThree;
-use Tests\Spacebib\Saga\Events\SagaEventStepTwo;
+use Spacebib\Saga\Tests\AggregateRoots\AggregateRootA;
+use Spacebib\Saga\Tests\Emails\FailedSagaMail;
+use Spacebib\Saga\Tests\Events\SagaEventStepOne;
+use Spacebib\Saga\Tests\Events\SagaEventStepThree;
+use Spacebib\Saga\Tests\Events\SagaEventStepTwo;
 
 class TestSagaWithExceptionSaga extends AggregateSaga
 {

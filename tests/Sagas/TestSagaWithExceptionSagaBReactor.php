@@ -1,13 +1,13 @@
 <?php
 
 
-namespace Tests\Spacebib\Saga\Sagas;
+namespace Spacebib\Saga\Tests\Sagas;
 
 
 use Spacebib\Saga\AggregateSagaReactor;
-use Tests\Spacebib\Saga\Events\SagaEventStepFive;
-use Tests\Spacebib\Saga\Events\SagaEventStepFourB;
-use Tests\Spacebib\Saga\Events\SagaEventStepSeven;
+use Spacebib\Saga\Tests\Events\SagaEventStepFive;
+use Spacebib\Saga\Tests\Events\SagaEventStepFourB;
+use Spacebib\Saga\Tests\Events\SagaEventStepSeven;
 
 class TestSagaWithExceptionSagaBReactor extends AggregateSagaReactor
 {

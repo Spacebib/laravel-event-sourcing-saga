@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\Spacebib\Saga;
+namespace Spacebib\Saga\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Ramsey\Uuid\Uuid;
-use Tests\Spacebib\Saga\AggregateRoots\AggregateRootA;
-use Tests\Spacebib\Saga\Events\SagaEventStepEight;
-use Tests\Spacebib\Saga\Events\SagaEventStepFive;
-use Tests\Spacebib\Saga\Events\SagaEventStepFourA;
-use Tests\Spacebib\Saga\Events\SagaEventStepSix;
-use Tests\Spacebib\Saga\Sagas\TestSagaWithExceptionSagaAReactor;
-use Tests\Spacebib\Saga\Sagas\TestSagaWithExceptionSagaBReactor;
+use Spacebib\Saga\Tests\AggregateRoots\AggregateRootA;
+use Spacebib\Saga\Tests\Events\SagaEventStepEight;
+use Spacebib\Saga\Tests\Events\SagaEventStepFive;
+use Spacebib\Saga\Tests\Events\SagaEventStepFourA;
+use Spacebib\Saga\Tests\Events\SagaEventStepSix;
+use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
+use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
 use Tests\TestCase;
 
 class AggregateSagaTestA extends TestCase

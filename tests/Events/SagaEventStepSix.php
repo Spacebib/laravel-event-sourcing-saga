@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Tests\Spacebib\Saga\Events;
+namespace Spacebib\Saga\Tests\Events;
 
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 

@@ -1,20 +1,20 @@
 <?php
 
 
-namespace Tests\Spacebib\Saga\AggregateRoots;
+namespace Spacebib\Saga\Tests\AggregateRoots;
 
 
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
-use Tests\Spacebib\Saga\Events\SagaEventStepEight;
-use Tests\Spacebib\Saga\Events\SagaEventStepFive;
-use Tests\Spacebib\Saga\Events\SagaEventStepFourA;
-use Tests\Spacebib\Saga\Events\SagaEventStepFourB;
-use Tests\Spacebib\Saga\Events\SagaEventStepNine;
-use Tests\Spacebib\Saga\Events\SagaEventStepOne;
-use Tests\Spacebib\Saga\Events\SagaEventStepSeven;
-use Tests\Spacebib\Saga\Events\SagaEventStepSix;
-use Tests\Spacebib\Saga\Events\SagaEventStepThree;
-use Tests\Spacebib\Saga\Events\SagaEventStepTwo;
+use Spacebib\Saga\Tests\Events\SagaEventStepEight;
+use Spacebib\Saga\Tests\Events\SagaEventStepFive;
+use Spacebib\Saga\Tests\Events\SagaEventStepFourA;
+use Spacebib\Saga\Tests\Events\SagaEventStepFourB;
+use Spacebib\Saga\Tests\Events\SagaEventStepNine;
+use Spacebib\Saga\Tests\Events\SagaEventStepOne;
+use Spacebib\Saga\Tests\Events\SagaEventStepSeven;
+use Spacebib\Saga\Tests\Events\SagaEventStepSix;
+use Spacebib\Saga\Tests\Events\SagaEventStepThree;
+use Spacebib\Saga\Tests\Events\SagaEventStepTwo;
 
 class AggregateRootA extends AggregateRoot
 {
