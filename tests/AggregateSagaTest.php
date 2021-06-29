@@ -14,13 +14,11 @@ use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 use Spacebib\Saga\Tests\Emails\FailedSagaMail;
-use Spacebib\Saga\Tests\Events\SagaEventStepEight;
 use Spacebib\Saga\Tests\Events\SagaEventStepOne;
 use Spacebib\Saga\Tests\Events\SagaEventStepThree;
 use Spacebib\Saga\Tests\Events\SagaEventStepTwo;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSaga;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaReactor;
-use Tests\TestCase;
 
 class AggregateSagaTest extends TestCase
 {

@@ -11,7 +11,6 @@ use Spacebib\Saga\Tests\Events\SagaEventStepNine;
 use Spacebib\Saga\Tests\Events\SagaEventStepSeven;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
-use Tests\TestCase;
 
 class AggregateSagaTestB extends TestCase
 {
