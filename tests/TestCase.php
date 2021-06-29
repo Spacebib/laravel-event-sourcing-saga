@@ -1,15 +1,23 @@
 <?php
 
 namespace Spacebib\Saga\Tests;
+use Orchestra\Testbench\TestCase as Orchestra;
+use Spacebib\Saga\SagaServiceProvider;
+use Spatie\EventSourcing\EventSourcingServiceProvider;
 
-use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-
-abstract class TestCase extends BaseTestCase
+abstract class TestCase extends Orchestra
 {
-    use CreatesApplication;
-
     protected function setUp(): void
     {
         parent::setUp();
     }
+
+    protected function getPackageProviders($app)
+    {
+        return [
+            EventSourcingServiceProvider::class,
+            SagaServiceProvider::class
+        ];
+    }
+
 }

@@ -2,7 +2,6 @@
 
 namespace Spacebib\Saga\Tests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Ramsey\Uuid\Uuid;
 use Spacebib\Saga\Tests\AggregateRoots\AggregateRootA;
 use Spacebib\Saga\Tests\Events\SagaEventStepEight;
@@ -14,7 +13,6 @@ use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
 
 class AggregateSagaTestA extends TestCase
 {
-    use RefreshDatabase;
 
     public function test_it_can_create_event_five_and_six_eight()
     {

@@ -5,7 +5,6 @@ namespace Spacebib\Saga\Tests;
 use Spacebib\Saga\AggregateSaga;
 use Spacebib\Saga\Events\SagaRolledBack;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Ramsey\Uuid\Uuid;
 use Spatie\EventSourcing\Enums\MetaData;
@@ -22,7 +21,6 @@ use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaReactor;
 
 class AggregateSagaTest extends TestCase
 {
-    use RefreshDatabase;
 
     public function test_it_can_rollback()
     {

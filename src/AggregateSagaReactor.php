@@ -25,7 +25,7 @@ class AggregateSagaReactor extends Reactor implements ShouldQueue
     public function withTries(): int
     {
         if ($this instanceof ShouldQueue) {
-            return config('event-sourcing.rollback_tries');
+            return config('event-sourcing-saga.rollback_tries');
         }
         return  1;
     }

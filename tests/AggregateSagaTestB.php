@@ -2,20 +2,18 @@
 
 namespace Spacebib\Saga\Tests;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Ramsey\Uuid\Uuid;
 use Spacebib\Saga\Tests\AggregateRoots\AggregateRootA;
 use Spacebib\Saga\Tests\Events\SagaEventStepFive;
 use Spacebib\Saga\Tests\Events\SagaEventStepFourB;
 use Spacebib\Saga\Tests\Events\SagaEventStepNine;
 use Spacebib\Saga\Tests\Events\SagaEventStepSeven;
+use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaA;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
 
 class AggregateSagaTestB extends TestCase
 {
-    use RefreshDatabase;
-
     public function test_it_can_create_event_five_and_seven_and_nine()
     {
         // arrange

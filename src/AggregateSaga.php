@@ -9,6 +9,7 @@ use Spacebib\Saga\Events\SagaRunning;
 use Spacebib\Saga\Events\SagaStoredEventFailedToProcess;
 use Spacebib\Saga\Events\SagaStoredEventProcessed;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
+use Spatie\EventSourcing\StoredEvents\Repositories\StoredEventRepository;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
@@ -233,6 +234,11 @@ class AggregateSaga extends AggregateRoot
             ->reverse()
             ->map(fn (int $id) => $this->getStoredEventRepository()->getById($id))
             ->each(fn (StoredEvent $storedEvent) => $this->onDomainEventRollback($storedEvent));
+    }
+
+    protected function getStoredEventRepository(): StoredEventRepository
+    {
+        return app(AppEloquentStoredEventRepository::class);
     }
 
     /**
