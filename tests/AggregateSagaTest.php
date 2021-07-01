@@ -3,10 +3,20 @@
 namespace Spacebib\Saga\Tests;
 
 use Spacebib\Saga\AggregateSaga;
+use Spacebib\Saga\EloquentSagaStoredEvent;
+use Spacebib\Saga\Events\SagaCompleted;
 use Spacebib\Saga\Events\SagaRolledBack;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 use Ramsey\Uuid\Uuid;
+use Spacebib\Saga\Events\SagaRunning;
+use Spacebib\Saga\Events\SagaStoredEventProcessed;
+use Spacebib\Saga\Tests\AggregateRoots\AggregateRootA;
+use Spacebib\Saga\Tests\Events\SagaEventStepEight;
+use Spacebib\Saga\Tests\Events\SagaEventStepFive;
+use Spacebib\Saga\Tests\Events\SagaEventStepFourA;
+use Spacebib\Saga\Tests\Events\SagaEventStepSix;
+use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
 use Spatie\EventSourcing\Enums\MetaData;
 use Spatie\EventSourcing\Facades\Projectionist;
 use Spatie\EventSourcing\StoredEvents\Models\EloquentStoredEvent;
@@ -21,7 +31,6 @@ use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaReactor;
 
 class AggregateSagaTest extends TestCase
 {
-
     public function test_it_can_rollback()
     {
         // arrange
@@ -107,6 +116,24 @@ class AggregateSagaTest extends TestCase
             // assert
             Mail::assertNothingQueued();
         }
+    }
+
+    public function test_it_can_save_saga_dedicated_database()
+    {
+        // arrange
+        \Spatie\EventSourcing\Facades\Projectionist::withoutEventHandlers();
+        \Spatie\EventSourcing\Facades\Projectionist::addReactors([TestSagaWithExceptionSagaAReactor::class]);
+        // act
+        $aggregateUuid = Uuid::uuid4();
+        AggregateRootA::retrieve($aggregateUuid)->processStepFourA()->persist();
+
+        EloquentStoredEvent::query()->uuid($aggregateUuid)->get()->each(function (EloquentStoredEvent $storedEvent) {
+            $this->assertContains($storedEvent->event_class, [SagaEventStepFourA::class, SagaEventStepFive::class, SagaEventStepSix::class, SagaEventStepEight::class]);
+        });
+
+        EloquentSagaStoredEvent::query()->get()->each(function (EloquentSagaStoredEvent $sagaStoredEvent) {
+            $this->assertContains($sagaStoredEvent->event_class, [SagaRunning::class, SagaStoredEventProcessed::class, SagaCompleted::class]);
+        });
     }
 
     private function createStoredEvent(ShouldBeStored $eventOne, array $metaData = []): StoredEvent

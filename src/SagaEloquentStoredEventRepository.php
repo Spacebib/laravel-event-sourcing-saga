@@ -17,7 +17,7 @@ class SagaEloquentStoredEventRepository extends EloquentStoredEventRepository
         }
     }
 
-    public function getById($id): StoredEvent
+    public function getEloquentStoredEventById($id): StoredEvent
     {
         /** @var \Illuminate\Database\Query\Builder $query */
         $query = app(config('event-sourcing.stored_event_repository'))->storedEventModel::query();

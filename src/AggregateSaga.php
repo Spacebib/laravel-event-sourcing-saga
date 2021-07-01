@@ -229,7 +229,7 @@ class AggregateSaga extends AggregateRoot
         collect($this->processedStoredEventIds)
             ->unique()
             ->reverse()
-            ->map(fn (int $id) => $this->getStoredEventRepository()->getById($id))
+            ->map(fn (int $id) => $this->getStoredEventRepository()->getEloquentStoredEventById($id))
             ->each(fn (StoredEvent $storedEvent) => $this->onDomainEventRollback($storedEvent));
     }
 
