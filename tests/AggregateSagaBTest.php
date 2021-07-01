@@ -8,7 +8,6 @@ use Spacebib\Saga\Tests\Events\SagaEventStepFive;
 use Spacebib\Saga\Tests\Events\SagaEventStepFourB;
 use Spacebib\Saga\Tests\Events\SagaEventStepNine;
 use Spacebib\Saga\Tests\Events\SagaEventStepSeven;
-use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaA;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaAReactor;
 use Spacebib\Saga\Tests\Sagas\TestSagaWithExceptionSagaBReactor;
 

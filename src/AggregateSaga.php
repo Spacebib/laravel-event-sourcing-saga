@@ -9,7 +9,6 @@ use Spacebib\Saga\Events\SagaRunning;
 use Spacebib\Saga\Events\SagaStoredEventFailedToProcess;
 use Spacebib\Saga\Events\SagaStoredEventProcessed;
 use Spatie\EventSourcing\AggregateRoots\AggregateRoot;
-use Spatie\EventSourcing\StoredEvents\Repositories\StoredEventRepository;
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
@@ -105,7 +104,7 @@ class AggregateSaga extends AggregateRoot
 
         $storedEvents = $storedEvents->map(function (StoredEvent $storedEvent) {
             $storedEvent->meta_data[self::SAGE_UUID_META_KEY] = $this->uuid();
-            $this->getStoredEventRepository()->update($storedEvent);
+            parent::getStoredEventRepository()->update($storedEvent);
             return $storedEvent;
         });
 
@@ -138,7 +137,6 @@ class AggregateSaga extends AggregateRoot
         }
 
         $this->$method($domainEvent);
-
         $this->recordThat(
             new SagaRolledBack(
                 $storedEvent->id,
@@ -228,7 +226,6 @@ class AggregateSaga extends AggregateRoot
         if ($this->failedCount < $this->tries) {
             return;
         }
-
         collect($this->processedStoredEventIds)
             ->unique()
             ->reverse()
@@ -236,9 +233,9 @@ class AggregateSaga extends AggregateRoot
             ->each(fn (StoredEvent $storedEvent) => $this->onDomainEventRollback($storedEvent));
     }
 
-    protected function getStoredEventRepository(): StoredEventRepository
+    protected function getStoredEventRepository(): SagaEloquentStoredEventRepository
     {
-        return app(SagaEloquentStoredEventRepository::class);
+        return app(config('event-sourcing-saga.saga_stored_event_repository') ?? SagaEloquentStoredEventRepository::class);
     }
 
     /**
