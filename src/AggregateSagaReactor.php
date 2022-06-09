@@ -10,6 +10,8 @@ use Spatie\EventSourcing\StoredEvents\StoredEvent;
 
 class AggregateSagaReactor extends Reactor implements ShouldQueue
 {
+    protected array $handlesEvents = [];
+
     private string $sagaUUid;
 
     public function getSagaUUid(): string
@@ -25,7 +27,7 @@ class AggregateSagaReactor extends Reactor implements ShouldQueue
     public function withTries(): int
     {
         if ($this instanceof ShouldQueue) {
-            return config('event-sourcing-saga.rollback_tries');
+            return config('event-sourcing-saga.rollback_tries', 3);
         }
         return  1;
     }
@@ -49,37 +51,53 @@ class AggregateSagaReactor extends Reactor implements ShouldQueue
         $this->sagaUUid = Uuid::uuid4();
     }
 
-    public function onStart(StoredEvent $storedEvent, ShouldBeStored $event)
+    public function onStart(ShouldBeStored $event)
     {
         $this->resolveSagaUuid();
 
         $this
             ->resolveSaga()::retrieve($this->getSagaUUid())
             ->setTries($this->withTries())
-            ->onStart($storedEvent, $event);
+            ->onStart($event, $event->aggregateRootUuid());
     }
 
-    public function onRunning(StoredEvent $storedEvent, ShouldBeStored $event)
+    public function onRunning(ShouldBeStored $event)
     {
-        if (! isset($storedEvent->meta_data[AggregateSaga::SAGE_UUID_META_KEY])) {
+        if (! isset($event->metaData()[AggregateSaga::SAGE_UUID_META_KEY])) {
             return;
         }
 
         $this
-            ->resolveSaga()::retrieve($storedEvent->meta_data[AggregateSaga::SAGE_UUID_META_KEY])
+            ->resolveSaga()::retrieve($event->metaData()[AggregateSaga::SAGE_UUID_META_KEY])
             ->setTries($this->withTries())
-            ->onRunning($storedEvent, $event);
+            ->onRunning($event, $event->aggregateRootUuid());
     }
 
-    public function onComplete(StoredEvent $storedEvent, ShouldBeStored $event)
+    public function onComplete(ShouldBeStored $event)
     {
-        if (! isset($storedEvent->meta_data[AggregateSaga::SAGE_UUID_META_KEY])) {
+        if (! isset($event->metaData()[AggregateSaga::SAGE_UUID_META_KEY])) {
             return;
         }
 
         $this
-            ->resolveSaga()::retrieve($storedEvent->meta_data[AggregateSaga::SAGE_UUID_META_KEY])
+            ->resolveSaga()::retrieve($event->metaData()[AggregateSaga::SAGE_UUID_META_KEY])
             ->setTries($this->withTries())
-            ->onComplete($storedEvent, $event);
+            ->onComplete($event, $event->aggregateRootUuid());
+    }
+
+    public function handle(StoredEvent $storedEvent): void
+    {
+        $handlerMethod = collect($this->handlesEvents ?? [])
+            ->mapWithKeys(function (string $handlerMethod, $eventClass) {
+                if (is_numeric($eventClass)) {
+                    return [$handlerMethod => 'on'.ucfirst(class_basename($handlerMethod))];
+                }
+
+                return [$eventClass => $handlerMethod];
+            })->get($storedEvent->event_class);
+
+        if ($handlerMethod && method_exists($this, $handlerMethod)) {
+            $this->$handlerMethod($storedEvent->event);
+        }
     }
 }

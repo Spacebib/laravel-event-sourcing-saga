@@ -42,9 +42,9 @@ class AggregateSaga extends AggregateRoot
         return $this->processedStoredEventIds;
     }
 
-    public function onStart(StoredEvent $storedEvent, ShouldBeStored $domainEvent): self
+    public function onStart(ShouldBeStored $domainEvent, string $aggregateRootUuid): self
     {
-        if ($this->isDuplicateEvent($storedEvent->id)) {
+        if ($this->isDuplicateEvent($domainEvent->storedEventId())) {
             return $this;
         }
 
@@ -54,18 +54,19 @@ class AggregateSaga extends AggregateRoot
 
         $this->markAsRunning($domainEvent);
 
-        $this->onDomainEvent($storedEvent, $domainEvent);
+        $this->onDomainEvent($domainEvent, $aggregateRootUuid);
 
         return $this;
     }
 
-    public function onRunning(StoredEvent $storedEvent, ShouldBeStored $domainEvent): self
+    public function onRunning(ShouldBeStored $domainEvent, string $aggregateRootUuid): self
     {
         if (static::class !== $this->sagaName) {
             return $this;
         }
 
-        if ($this->isDuplicateEvent($storedEvent->id)) {
+        if ($this->isDuplicateEvent($domainEvent->storedEventId())) {
+            dd('aa');
             return $this;
         }
 
@@ -73,17 +74,17 @@ class AggregateSaga extends AggregateRoot
             return $this;
         }
 
-        $this->onDomainEvent($storedEvent, $domainEvent);
+        $this->onDomainEvent($domainEvent, $aggregateRootUuid);
 
         return $this;
     }
 
-    public function onComplete(StoredEvent $storedEvent, ShouldBeStored $domainEvent): self
+    public function onComplete(ShouldBeStored $domainEvent, string $aggregateRootUuid): self
     {
         if (static::class !== $this->sagaName) {
             return $this;
         }
-        if ($this->isDuplicateEvent($storedEvent->id)) {
+        if ($this->isDuplicateEvent($domainEvent->storedEventId())) {
             return $this;
         }
 
@@ -91,9 +92,9 @@ class AggregateSaga extends AggregateRoot
             return $this;
         }
 
-        $this->onDomainEvent($storedEvent, $domainEvent);
+        $this->onDomainEvent($domainEvent, $aggregateRootUuid);
 
-        $this->markAsCompleted($storedEvent, $domainEvent);
+        $this->markAsCompleted($domainEvent, $aggregateRootUuid);
 
         return $this;
     }
@@ -103,7 +104,11 @@ class AggregateSaga extends AggregateRoot
         $storedEvents = $aggregateRoot->persistWithoutApplyingToEventHandlers();
 
         $storedEvents = $storedEvents->map(function (StoredEvent $storedEvent) {
-            $storedEvent->meta_data[self::SAGE_UUID_META_KEY] = $this->uuid();
+            $metaData = $storedEvent->event->metaData();
+            $metaData[self::SAGE_UUID_META_KEY] = $this->uuid();
+            $event  = $storedEvent->event->setMetaData($metaData);
+            $storedEvent->event = $event;
+            $storedEvent->meta_data = $metaData;
             parent::getStoredEventRepository()->update($storedEvent);
             return $storedEvent;
         });
@@ -124,7 +129,7 @@ class AggregateSaga extends AggregateRoot
         return $this->internalState;
     }
 
-    private function onDomainEventRollback(StoredEvent $storedEvent)
+    private function onDomainEventRollback(StoredEvent $storedEvent, string $aggregateRootUuid)
     {
         $domainEvent = $storedEvent->event;
 
@@ -148,7 +153,7 @@ class AggregateSaga extends AggregateRoot
         )->persist();
     }
 
-    private function onDomainEvent(StoredEvent $storedEvent, ShouldBeStored $domainEvent)
+    private function onDomainEvent(ShouldBeStored $domainEvent, string $aggregateRootUuid)
     {
         $eventShortName = $this->getShortName($domainEvent);
         $method = sprintf('on%s', $eventShortName);
@@ -164,12 +169,12 @@ class AggregateSaga extends AggregateRoot
         }
 
         try {
-            $this->$method($domainEvent, $storedEvent);
-            $this->acknowledgeStoredEvent($storedEvent->id, $eventShortName, $domainEvent->aggregateRootUuid());
+            $this->$method($domainEvent);
+            $this->acknowledgeStoredEvent($domainEvent->storedEventId(), $eventShortName, $domainEvent->aggregateRootUuid());
         } catch (\Exception $exception) {
             $this->recordThat(
                 new SagaStoredEventFailedToProcess(
-                    $storedEvent->id,
+                    $domainEvent->storedEventId(),
                     $eventShortName,
                     $domainEvent->aggregateRootUuid(),
                     static::class
@@ -229,8 +234,8 @@ class AggregateSaga extends AggregateRoot
         collect($this->processedStoredEventIds)
             ->unique()
             ->reverse()
-            ->map(fn (int $id) => $this->getStoredEventRepository()->getEloquentStoredEventById($id))
-            ->each(fn (StoredEvent $storedEvent) => $this->onDomainEventRollback($storedEvent));
+            ->map(fn (int $id) => parent::getStoredEventRepository()->find($id))
+            ->each(fn (StoredEvent $storedEvent) => $this->onDomainEventRollback($storedEvent, $storedEvent->aggregate_uuid));
     }
 
     protected function getStoredEventRepository(): SagaEloquentStoredEventRepository
@@ -248,15 +253,15 @@ class AggregateSaga extends AggregateRoot
     }
 
     /**
-     * @param  StoredEvent  $storedEvent
      * @param  ShouldBeStored  $domainEvent
+     * @param  string  $aggregateUuid
      */
-    private function markAsCompleted(StoredEvent $storedEvent, ShouldBeStored $domainEvent): void
+    private function markAsCompleted(ShouldBeStored $domainEvent, string $aggregateUuid): void
     {
         $this::retrieve($this->uuid())
             ->recordThat(
                 new SagaCompleted(
-                    $storedEvent->id,
+                    $domainEvent->storedEventId(),
                     $this->getShortName($domainEvent),
                     $domainEvent->aggregateRootUuid(),
                     static::class

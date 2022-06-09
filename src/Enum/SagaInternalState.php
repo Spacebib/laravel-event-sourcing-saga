@@ -12,17 +12,4 @@ use Spatie\Enum\Enum;
 
 class SagaInternalState extends Enum
 {
-    public function equals(self ...$others): bool
-    {
-        foreach ($others as $other) {
-            if (
-                static::class === \get_class($other)
-                && $this->value === $other->value
-            ) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
