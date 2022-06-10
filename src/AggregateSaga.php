@@ -66,7 +66,6 @@ class AggregateSaga extends AggregateRoot
         }
 
         if ($this->isDuplicateEvent($domainEvent->storedEventId())) {
-            dd('aa');
             return $this;
         }
 
